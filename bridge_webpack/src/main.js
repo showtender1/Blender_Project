@@ -370,7 +370,7 @@ canvas.addEventListener('click', e => {
 	checkIntersects();
 });
 
-// 버튼
+// 버튼 (기존 위치 유지)
 const btnWrapper = document.createElement('div');
 
 const ilbuniBtn = document.createElement('button');
@@ -387,7 +387,38 @@ btnWrapper.append(robotBtn);
 
 document.body.append(btnWrapper);
 
-ilbuniBtn.addEventListener('click', () => player.changeModel('ilbuni'));
-robotBtn.addEventListener('click', () => player.changeModel('robot26'));
+// 페이지 내 팝업
+const popupOverlay = document.createElement('div');
+popupOverlay.className = 'popup-overlay hidden';
+const popup = document.createElement('div');
+popup.className = 'popup';
+const logBox = document.createElement('div');
+logBox.className = 'popup-log';
+popup.append(logBox);
+popupOverlay.append(popup);
+document.body.append(popupOverlay);
+
+popupOverlay.addEventListener('click', () => {
+	popupOverlay.classList.add('hidden');
+});
+popup.addEventListener('click', e => e.stopPropagation());
+
+const appendLog = (message) => {
+	logBox.innerHTML = '';
+	const item = document.createElement('p');
+	item.textContent = message;
+	logBox.append(item);
+	logBox.scrollTop = logBox.scrollHeight;
+	popupOverlay.classList.remove('hidden');
+};
+
+ilbuniBtn.addEventListener('click', () => {
+	player.changeModel('ilbuni');
+	appendLog('일분이로 변경됨');
+});
+robotBtn.addEventListener('click', () => {
+	player.changeModel('robot26');
+	appendLog('로봇으로 변경됨');
+});
 
 draw();
