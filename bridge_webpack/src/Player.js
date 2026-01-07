@@ -30,6 +30,9 @@ export class Player extends Stuff {
 				});
 
 				this.modelMesh = glb.scene.children[0];
+				if (name === 'robot26') {
+					this.modelMesh.scale.setScalar(0.7);
+				}
 				this.modelMesh.position.set(this.x, this.y, this.z);
 				this.modelMesh.rotation.set(
 					this.rotationX,
