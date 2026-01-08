@@ -44,13 +44,37 @@ export class Player extends Stuff {
 				this.modelMesh.animations = glb.animations;
 				cm1.mixer = new AnimationMixer(this.modelMesh);
 				this.actions = [];
-				this.actions[0] = cm1.mixer.clipAction(this.modelMesh.animations[0]);
-				this.actions[1] = cm1.mixer.clipAction(this.modelMesh.animations[1]);
-				this.actions[2] = cm1.mixer.clipAction(this.modelMesh.animations[2]);
-				this.actions[2].repetitions = 1;
-				this.actions[0].play();
+				
+				// 애니메이션이 존재하는지 확인하고 안전하게 처리
+				if (this.modelMesh.animations && this.modelMesh.animations.length > 0) {
+					this.actions[0] = this.modelMesh.animations[0] 
+						? cm1.mixer.clipAction(this.modelMesh.animations[0]) 
+						: null;
+					this.actions[1] = this.modelMesh.animations[1] 
+						? cm1.mixer.clipAction(this.modelMesh.animations[1]) 
+						: null;
+					this.actions[2] = this.modelMesh.animations[2] 
+						? cm1.mixer.clipAction(this.modelMesh.animations[2]) 
+						: null;
+					
+					if (this.actions[2]) {
+						this.actions[2].repetitions = 1;
+					}
+				if (this.actions[0]) {
+					this.actions[0].play();
+				}
+			}
 
-				this.setCannonBody();
+			// 기존 cannonBody가 있으면 제거하고 현재 위치 저장
+			if (this.cannonBody) {
+				const currentPosition = this.cannonBody.position;
+				this.x = currentPosition.x;
+				this.y = currentPosition.y;
+				this.z = currentPosition.z;
+				cm1.world.removeBody(this.cannonBody);
+			}
+
+			this.setCannonBody();
 			}
 		);
 	}

@@ -53,9 +53,9 @@ export const mat = {
 		opacity: 0.1
 	}),
 	glass2: new MeshPhongMaterial({
-		color: cm2.glassColor,
+		color: '#000000',
 		transparent: true,
-		opacity: 0.1
+		opacity: 0.3
 	})
 };
 

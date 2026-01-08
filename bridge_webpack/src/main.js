@@ -219,8 +219,10 @@ function checkClickedObject(mesh) {
 		if (jumping || fail) return;
 
 		if (mesh.step - 1 === cm2.step) {
-			player.actions[2].stop();
-			player.actions[2].play();
+			if (player.actions && player.actions[2]) {
+				player.actions[2].stop();
+				player.actions[2].play();
+			}
 			jumping = true;
 			cm2.step++;
 			console.log(cm2.step);
@@ -230,8 +232,27 @@ function checkClickedObject(mesh) {
 					console.log('normal!');
 					const timerId = setTimeout(() => {
 						fail = true;
-						player.actions[0].stop();
-						player.actions[1].play();
+						// 깨진 유리만 찾아서 제거
+						const brokenGlass = objects.find(obj => obj.name === mesh.name);
+						if (brokenGlass) {
+							// 씬에서 메시 제거
+							cm1.scene.remove(brokenGlass.mesh);
+							// 물리 엔진에서 바디 제거
+							if (brokenGlass.cannonBody) {
+								cm1.world.removeBody(brokenGlass.cannonBody);
+							}
+							// objects 배열에서 제거
+							const index = objects.indexOf(brokenGlass);
+							if (index > -1) {
+								objects.splice(index, 1);
+							}
+						}
+						if (player.actions && player.actions[0]) {
+							player.actions[0].stop();
+						}
+						if (player.actions && player.actions[1]) {
+							player.actions[1].play();
+						}
 						sideLights.forEach(item => {
 							item.turnOff();
 						});
@@ -279,8 +300,10 @@ function checkClickedObject(mesh) {
 			
 			if (cm2.step === numberOfGlass && mesh.type === 'strong') {
 				const timerId = setTimeout(() => {
-					player.actions[2].stop();
-					player.actions[2].play();
+					if (player.actions && player.actions[2]) {
+						player.actions[2].stop();
+						player.actions[2].play();
+					}
 
 					gsap.to(
 						player.cannonBody.position,
@@ -297,6 +320,11 @@ function checkClickedObject(mesh) {
 							y: 12
 						}
 					);
+
+					// 목적지 도착 후 성공 메시지 표시
+					setTimeout(() => {
+						appendLog('성공하셨습니다!');
+					}, 1500);
 
 					clearTimeout(timerId);
 				}, 1500);
