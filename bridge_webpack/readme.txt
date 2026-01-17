@@ -24,8 +24,3 @@ npm start 또는 npm run build 실행 시 에러가 난다면 Node.js를 LTS 버
 ----------
 n lts
 ----------
-
-(!)
-ERROR in unable to locate '경로...'
-위와 같은 에러가 발생한다면, webpack.config.js의 CopyWebpackPlugin에 설정된 파일이 있는지 확인해주세요.
-CSS나 이미지 폴더 등이 필요하지 않다면 webpack.config.js에서 CopyWebpackPlugin 부분 전체를 주석 처리 해주세요.
